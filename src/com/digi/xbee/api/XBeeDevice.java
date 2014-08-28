@@ -1217,10 +1217,29 @@ public class XBeeDevice {
 	}
 	
 	/**
+	 * Sends the provided data to all the XBee nodes of the network (broadcast) 
+	 * asynchronously.
+	 * 
+	 * <p>Asynchronous transmissions do not wait for answer from the remote 
+	 * device or for transmit status packet.</p>
+	 * 
+	 * @param data Byte array containing data to be sent.
+	 * 
+	 * @throws XBeeException if there is any XBee related exception.
+	 * @throws InterfaceNotOpenException if the device is not open.
+	 * @throws NullPointerException if {@code data == null}.
+	 * 
+	 * @see #sendBroadcastSerialData(byte[])
+	 */
+	public void sendBroadcastSerialDataAsync(byte[] data) throws TimeoutException, XBeeException {
+		sendSerialDataAsync(XBee64BitAddress.BROADCAST_ADDRESS, data);
+	}
+	
+	/**
 	 * Sends the provided data to the XBee device of the network corresponding 
 	 * to the given 64-bit address.
 	 * 
-	 * <p>This method blocks till a success or error response arrives or the 
+	 * <p>This method blocks till a success or error transmit status arrives or the 
 	 * configured receive timeout expires.</p>
 	 * 
 	 * <p>The received timeout is configured using the {@code setReceiveTimeout}
@@ -1281,7 +1300,7 @@ public class XBeeDevice {
 	 * Sends the provided data to the XBee device of the network corresponding 
 	 * to the given 16-bit address.
 	 * 
-	 * <p>This method blocks till a success or error response arrives or the 
+	 * <p>This method blocks till a success or error transmit status arrives or the 
 	 * configured receive timeout expires.</p>
 	 * 
 	 * <p>The received timeout is configured using the {@code setReceiveTimeout}
@@ -1342,7 +1361,7 @@ public class XBeeDevice {
 	 * Sends the provided data to the XBee device of the network corresponding 
 	 * to the given 64-Bit/16-Bit address.
 	 * 
-	 * <p>This method blocks till a success or error response arrives or the 
+	 * <p>This method blocks till a success or error transmit status arrives or the 
 	 * configured receive timeout expires.</p>
 	 * 
 	 * <p>The received timeout is configured using the {@code setReceiveTimeout}
@@ -1415,7 +1434,7 @@ public class XBeeDevice {
 	/**
 	 * Sends the provided data to the given XBee device.
 	 * 
-	 * <p>This method blocks till a success or error response arrives or the 
+	 * <p>This method blocks till a success or error transmit status arrives or the 
 	 * configured receive timeout expires.</p>
 	 * 
 	 * <p>The received timeout is configured using the {@code setReceiveTimeout}
@@ -1445,6 +1464,33 @@ public class XBeeDevice {
 		if (xbeeDevice == null)
 			throw new NullPointerException("XBee device cannot be null");
 		sendSerialData(xbeeDevice.get64BitAddress(), data);
+	}
+	
+	/**
+	 * Sends the provided data to all the XBee nodes of the network (broadcast).
+	 * 
+	 * <p>This method blocks till a success or error transmit status arrives or the 
+	 * configured receive timeout expires.</p>
+	 * 
+	 * <p>The received timeout is configured using the {@code setReceiveTimeout}
+	 * method and can be consulted with {@code getReceiveTimeout} method.</p>
+	 * 
+	 * <p>For non-blocking operations use the method 
+	 * {@link #sendBroadcastSerialDataAsync(byte[])}.</p>
+	 * 
+	 * @param data Byte array containing data to be sent.
+	 * 
+	 * @throws TimeoutException if there is a timeout sending the serial data.
+	 * @throws XBeeException if there is any other XBee related exception.
+	 * @throws InterfaceNotOpenException if the device is not open.
+	 * @throws NullPointerException if {@code data == null}.
+	 * 
+	 * @see #getReceiveTimeout()
+	 * @see #setReceiveTimeout(int)
+	 * @see #sendBroadcastSerialDataAsync(byte[])
+	 */
+	public void sendBroadcastSerialData(byte[] data) throws TimeoutException, XBeeException {
+		sendSerialData(XBee64BitAddress.BROADCAST_ADDRESS, data);
 	}
 	
 	/**
